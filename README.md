@@ -64,7 +64,7 @@ eigrp:
 
 ##### Jinja2 template for interface configuration
 
-```jijna2
+```jinja2
 #jinja2: lstrip_blocks:True, trim_blocks:True
 {% for intf in interfaces %}
 interface {{ intf.name }}
