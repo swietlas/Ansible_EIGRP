@@ -1,0 +1,19 @@
+interface Ethernet0/0
+   description Link to R2 configured by Ansible 
+   ip address 10.1.23.3 255.255.255.0
+   ipv6 address 2001:db8:acad:23::3/64
+   ipv6 address fe80::23:3 link-local
+   no shutdown
+interface Ethernet0/1
+   description Link to D2 configured by Ansible 
+   ip address 10.1.32.1 255.255.255.0
+   ipv6 address 2001:db8:acad:32::3/64
+   ipv6 address fe80::32:3 link-local
+   no cdp enable
+   no shutdown
+interface Loopback 0
+   description Loopback 0 configured by Ansible 
+   ip address 10.3.3.3 255.255.255.0
+   ipv6 address 2001:db8:acad:3::3/64
+   ipv6 address fe80::3:3 link-local
+   no shutdown

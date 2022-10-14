@@ -1,0 +1,59 @@
+---
+- name: Get date
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    # - name:  Timestamp
+    #   ansible.builtin.debug:
+    #     msg:
+    #       - "Timestamp in the ISO8601 format: {{ ansible_date_time.iso8601 }}"
+    #   tags: gettime
+
+    - name: Config Timestamp
+      ansible.builtin.set_fact:
+        DTG: "{{ ansible_date_time.iso8601 }}"
+      tags: gettime  
+
+    # - name: display DTG
+    #   ansible.builtin.debug:
+    #     msg:
+    #       - "DTG is: {{ DTG }}" 
+    #   tags: gettime 
+
+- name: Pre CRQ config backup
+  hosts: all
+  gather_facts: false
+  tags: backup
+  vars:
+    pref: PRE-CRQ
+  roles:
+    - backup_config
+
+- name: Configuring Basic Settings (Addr,Banner,basic EIGRP)
+  hosts: all
+  gather_facts: False
+  tags: basic
+  roles:
+    - motd_banner
+    - rtr_interfaces
+    - eigrp
+
+- name: Configuring Advanced Settings and show output
+  hosts: all
+  gather_facts: False
+  tags: basic
+  roles:
+    - redistribution
+    - save_config
+    - show_status
+  
+- name: Post CRQ config backup
+  hosts: all
+  tags: backup
+  gather_facts: False
+  vars:
+    pref: POST-CRQ
+  roles:
+    - backup_config
+  
+...

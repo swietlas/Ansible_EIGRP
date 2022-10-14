@@ -1,0 +1,406 @@
+
+PLAY [Get date] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Config Timestamp] ********************************************************
+ok: [localhost]
+
+PLAY [Pre CRQ config backup] ***************************************************
+
+TASK [backup_config : Collect ios_facts] ***************************************
+ok: [R2]
+ok: [D2]
+ok: [R1]
+ok: [R3]
+ok: [D1]
+
+TASK [backup_config : Backup configuration] ************************************
+changed: [D1]
+changed: [R2]
+changed: [R3]
+changed: [D2]
+changed: [R1]
+
+PLAY [Configuring Basic Settings (Addr,Banner,basic EIGRP)] ********************
+
+TASK [motd_banner : Configure IOS banner] **************************************
+ok: [R2]
+ok: [R3]
+ok: [R1]
+ok: [D2]
+ok: [D1]
+
+TASK [rtr_interfaces :  Build IOS interface config] ****************************
+ok: [R3]
+ok: [D2]
+ok: [D1]
+ok: [R2]
+ok: [R1]
+
+TASK [rtr_interfaces :  Send interface interface basic config to device(s)] ****
+changed: [R2]
+changed: [D2]
+changed: [D1]
+changed: [R1]
+changed: [R3]
+
+TASK [eigrp : Configure eigrp ipv4 from template] ******************************
+changed: [D2]
+changed: [D1]
+changed: [R2]
+changed: [R3]
+changed: [R1]
+
+PLAY [Configuring Advanced Settings and show output] ***************************
+
+TASK [redistribution : Apply EIGRP redistribution] *****************************
+ok: [D1]
+ok: [D2]
+ok: [R2]
+changed: [R1]
+changed: [R3]
+
+TASK [save_config : IOS >> Save Configuration to NVRAM] ************************
+changed: [R3]
+changed: [D1]
+changed: [R1]
+changed: [R2]
+changed: [D2]
+
+TASK [show_status : Send list of show commands to device(s)] *******************
+ok: [D2]
+ok: [R2]
+ok: [R3]
+ok: [D1]
+ok: [R1]
+
+TASK [show_status : Display command output stored in "command_output" variable] ***
+ok: [D1] => {
+    "command_output[\"stdout_lines\"]": [
+        [
+            "Interface              IP-Address      OK? Method Status                Protocol",
+            "Ethernet0/0            10.1.11.2       YES manual up                    up      ",
+            "Ethernet0/1            unassigned      YES unset  down                  down    ",
+            "Ethernet0/2            unassigned      YES unset  down                  down    ",
+            "Ethernet0/3            10.10.7.109     YES DHCP   up                    up      ",
+            "Loopback0              209.165.201.1   YES manual up                    up"
+        ],
+        [
+            "Gateway of last resort is not set",
+            "",
+            "      10.0.0.0/8 is variably subnetted, 7 subnets, 2 masks",
+            "D EX     10.1.1.0/24 [170/409600] via 10.1.11.1, 00:01:57, Ethernet0/0",
+            "C        10.1.11.0/24 is directly connected, Ethernet0/0",
+            "L        10.1.11.2/32 is directly connected, Ethernet0/0",
+            "D EX     10.1.12.0/24 [170/307200] via 10.1.11.1, 00:01:57, Ethernet0/0",
+            "D EX     10.1.23.0/24 [170/332800] via 10.1.11.1, 00:01:57, Ethernet0/0",
+            "D EX     10.1.32.0/24 [170/358400] via 10.1.11.1, 00:01:54, Ethernet0/0",
+            "D EX     10.3.3.0/24 [170/332851] via 10.1.11.1, 00:01:57, Ethernet0/0",
+            "      209.165.201.0/24 is variably subnetted, 2 subnets, 2 masks",
+            "C        209.165.201.0/25 is directly connected, Loopback0",
+            "L        209.165.201.1/32 is directly connected, Loopback0"
+        ],
+        [
+            "EIGRP-IPv4 Neighbors for AS(64512)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.11.1               Et0/0                    12 00:02:02    6   100  0  4"
+        ],
+        [
+            "Routing Protocol is \"eigrp 64512\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  EIGRP-IPv4 Protocol for AS(64512)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0",
+            "    Soft SIA disabled",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 11.11.11.11",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1"
+        ]
+    ]
+}
+ok: [R3] => {
+    "command_output[\"stdout_lines\"]": [
+        [
+            "Interface                  IP-Address      OK? Method Status                Protocol",
+            "Ethernet0/0                10.1.23.3       YES manual up                    up      ",
+            "Ethernet0/1                10.1.32.1       YES manual up                    up      ",
+            "Ethernet0/2                unassigned      YES TFTP   administratively down down    ",
+            "Ethernet0/3                10.10.7.210     YES DHCP   up                    up      ",
+            "Loopback0                  10.3.3.3        YES manual up                    up"
+        ],
+        [
+            "Gateway of last resort is not set",
+            "",
+            "      10.0.0.0/8 is variably subnetted, 9 subnets, 2 masks",
+            "D        10.1.1.0/24 [90/1536640] via 10.1.23.2, 00:01:59, Ethernet0/0",
+            "D EX     10.1.11.0/24 [170/2048000] via 10.1.23.2, 00:01:56, Ethernet0/0",
+            "D        10.1.12.0/24 [90/1536000] via 10.1.23.2, 00:01:59, Ethernet0/0",
+            "C        10.1.23.0/24 is directly connected, Ethernet0/0",
+            "L        10.1.23.3/32 is directly connected, Ethernet0/0",
+            "C        10.1.32.0/24 is directly connected, Ethernet0/1",
+            "L        10.1.32.1/32 is directly connected, Ethernet0/1",
+            "C        10.3.3.0/24 is directly connected, Loopback0",
+            "L        10.3.3.3/32 is directly connected, Loopback0"
+        ],
+        [
+            "EIGRP-IPv4 VR(AS_CISCO) Address-Family Neighbors for AS(64513)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.23.2               Et0/0                    11 00:02:01 1599  5000  0  10",
+            "EIGRP-IPv4 Neighbors for AS(64514)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.32.2               Et0/1                    12 00:02:01 1280  5000  0  4"
+        ],
+        [
+            "Routing Protocol is \"eigrp 64513\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  Redistributing: eigrp 64514",
+            "  EIGRP-IPv4 VR(AS_CISCO) Address-Family Protocol for AS(64513)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0",
+            "    Metric rib-scale 128",
+            "    Metric version 64bit",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 3.3.3.3",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1",
+            "      Total Prefix Count: 6",
+            "      Total Redist Count: 1",
+            "Routing Protocol is \"eigrp 64514\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  Redistributing: eigrp 64513",
+            "  EIGRP-IPv4 Protocol for AS(64514)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 3.3.3.3",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1"
+        ]
+    ]
+}
+ok: [R1] => {
+    "command_output[\"stdout_lines\"]": [
+        [
+            "Interface                  IP-Address      OK? Method Status                Protocol",
+            "Ethernet0/0                10.1.12.1       YES manual up                    up      ",
+            "Ethernet0/1                10.1.11.1       YES manual up                    up      ",
+            "Ethernet0/2                unassigned      YES TFTP   administratively down down    ",
+            "Ethernet0/3                10.10.7.112     YES DHCP   up                    up      ",
+            "Loopback1                  10.1.1.1        YES manual up                    up"
+        ],
+        [
+            "Gateway of last resort is not set",
+            "",
+            "      10.0.0.0/8 is variably subnetted, 9 subnets, 2 masks",
+            "C        10.1.1.0/24 is directly connected, Loopback1",
+            "L        10.1.1.1/32 is directly connected, Loopback1",
+            "C        10.1.11.0/24 is directly connected, Ethernet0/1",
+            "L        10.1.11.1/32 is directly connected, Ethernet0/1",
+            "C        10.1.12.0/24 is directly connected, Ethernet0/0",
+            "L        10.1.12.1/32 is directly connected, Ethernet0/0",
+            "D        10.1.23.0/24 [90/1536000] via 10.1.12.2, 00:02:00, Ethernet0/0",
+            "D EX     10.1.32.0/24 [170/2048000] via 10.1.12.2, 00:01:55, Ethernet0/0",
+            "D        10.3.3.0/24 [90/1536640] via 10.1.12.2, 00:02:00, Ethernet0/0"
+        ],
+        [
+            "EIGRP-IPv4 Neighbors for AS(64512)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.11.2               Et0/1                    11 00:02:02    4   100  0  4",
+            "EIGRP-IPv4 VR(AS_CISCO) Address-Family Neighbors for AS(64513)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.12.2               Et0/0                    14 00:02:01    4   100  0  11"
+        ],
+        [
+            "Routing Protocol is \"eigrp 64512\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  Redistributing: eigrp 64513",
+            "  EIGRP-IPv4 Protocol for AS(64512)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 1.1.1.1",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1",
+            "Routing Protocol is \"eigrp 64513\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  Redistributing: eigrp 64512",
+            "  EIGRP-IPv4 VR(AS_CISCO) Address-Family Protocol for AS(64513)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0",
+            "    Metric rib-scale 128",
+            "    Metric version 64bit",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 1.1.1.1",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1",
+            "      Total Prefix Count: 6",
+            "      Total Redist Count: 1"
+        ]
+    ]
+}
+ok: [R2] => {
+    "command_output[\"stdout_lines\"]": [
+        [
+            "Interface                  IP-Address      OK? Method Status                Protocol",
+            "Ethernet0/0                10.1.12.2       YES manual up                    up      ",
+            "Ethernet0/1                10.1.23.2       YES manual up                    up      ",
+            "Ethernet0/2                unassigned      YES TFTP   administratively down down    ",
+            "Ethernet0/3                10.10.7.161     YES DHCP   up                    up"
+        ],
+        [
+            "Gateway of last resort is not set",
+            "",
+            "      10.0.0.0/8 is variably subnetted, 8 subnets, 2 masks",
+            "D        10.1.1.0/24 [90/1024640] via 10.1.12.1, 00:01:59, Ethernet0/0",
+            "D EX     10.1.11.0/24 [170/1536000] via 10.1.12.1, 00:01:56, Ethernet0/0",
+            "C        10.1.12.0/24 is directly connected, Ethernet0/0",
+            "L        10.1.12.2/32 is directly connected, Ethernet0/0",
+            "C        10.1.23.0/24 is directly connected, Ethernet0/1",
+            "L        10.1.23.2/32 is directly connected, Ethernet0/1",
+            "D EX     10.1.32.0/24 [170/1536000] via 10.1.23.3, 00:01:54, Ethernet0/1",
+            "D        10.3.3.0/24 [90/1024640] via 10.1.23.3, 00:01:59, Ethernet0/1"
+        ],
+        [
+            "EIGRP-IPv4 VR(AS_CISCO) Address-Family Neighbors for AS(64513)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "1   10.1.12.1               Et0/0                    11 00:02:01    2   100  0  4",
+            "0   10.1.23.3               Et0/1                    14 00:02:01    3   100  0  4"
+        ],
+        [
+            "Routing Protocol is \"eigrp 64513\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  EIGRP-IPv4 VR(AS_CISCO) Address-Family Protocol for AS(64513)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0",
+            "    Metric rib-scale 128",
+            "    Metric version 64bit",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 2.2.2.2",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1",
+            "      Total Prefix Count: 6",
+            "      Total Redist Count: 0"
+        ]
+    ]
+}
+ok: [D2] => {
+    "command_output[\"stdout_lines\"]": [
+        [
+            "Interface              IP-Address      OK? Method Status                Protocol",
+            "Ethernet0/0            10.1.32.2       YES manual up                    up      ",
+            "Ethernet0/1            unassigned      YES unset  down                  down    ",
+            "Ethernet0/2            unassigned      YES unset  down                  down    ",
+            "Ethernet0/3            10.10.7.158     YES DHCP   up                    up      ",
+            "Loopback0              198.51.100.1    YES manual up                    up"
+        ],
+        [
+            "Gateway of last resort is not set",
+            "",
+            "      10.0.0.0/8 is variably subnetted, 7 subnets, 2 masks",
+            "D EX     10.1.1.0/24 [170/332851] via 10.1.32.1, 00:01:57, Ethernet0/0",
+            "D EX     10.1.11.0/24 [170/358400] via 10.1.32.1, 00:01:56, Ethernet0/0",
+            "D EX     10.1.12.0/24 [170/332800] via 10.1.32.1, 00:01:57, Ethernet0/0",
+            "D EX     10.1.23.0/24 [170/307200] via 10.1.32.1, 00:01:57, Ethernet0/0",
+            "C        10.1.32.0/24 is directly connected, Ethernet0/0",
+            "L        10.1.32.2/32 is directly connected, Ethernet0/0",
+            "D EX     10.3.3.0/24 [170/409600] via 10.1.32.1, 00:01:57, Ethernet0/0",
+            "      198.51.100.0/24 is variably subnetted, 2 subnets, 2 masks",
+            "C        198.51.100.0/25 is directly connected, Loopback0",
+            "L        198.51.100.1/32 is directly connected, Loopback0"
+        ],
+        [
+            "EIGRP-IPv4 Neighbors for AS(64514)",
+            "H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq",
+            "                                                   (sec)         (ms)       Cnt Num",
+            "0   10.1.32.1               Et0/0                    11 00:02:01    3   100  0  4"
+        ],
+        [
+            "Routing Protocol is \"eigrp 64514\"",
+            "  Outgoing update filter list for all interfaces is not set",
+            "  Incoming update filter list for all interfaces is not set",
+            "  Default networks flagged in outgoing updates",
+            "  Default networks accepted from incoming updates",
+            "  EIGRP-IPv4 Protocol for AS(64514)",
+            "    Metric weight K1=1, K2=0, K3=1, K4=0, K5=0",
+            "    Soft SIA disabled",
+            "    NSF-aware route hold timer is 240",
+            "    Router-ID: 22.22.22.22",
+            "    Topology : 0 (base) ",
+            "      Active Timer: 3 min",
+            "      Distance: internal 90 external 170",
+            "      Maximum path: 4",
+            "      Maximum hopcount 100",
+            "      Maximum metric variance 1"
+        ]
+    ]
+}
+
+PLAY [Post CRQ config backup] **************************************************
+
+TASK [backup_config : Collect ios_facts] ***************************************
+ok: [R2]
+ok: [R3]
+ok: [R1]
+ok: [D1]
+ok: [D2]
+
+TASK [backup_config : Backup configuration] ************************************
+changed: [D1]
+changed: [R3]
+changed: [R1]
+changed: [R2]
+changed: [D2]
+
+PLAY RECAP *********************************************************************
+D1                         : ok=12   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+D2                         : ok=12   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+R1                         : ok=12   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+R2                         : ok=12   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+R3                         : ok=12   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

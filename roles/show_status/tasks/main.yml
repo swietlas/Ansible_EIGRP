@@ -1,0 +1,29 @@
+---
+# tasks file for roles/show_status
+
+- name: Send list of show commands to device(s)
+  ios_command:
+    commands: 
+     - show ip int brief
+     - sh ip route | begin Gateway
+     - sh ip eigrp neighbors  
+     #- sh ip eigrp interfaces 
+     - sh ip protocols | section eigrp
+  register: command_output
+
+- name: Display command output stored in "command_output" variable
+  debug:
+    var: command_output["stdout_lines"]
+
+    #var: command_output["stdout_lines"][0]
+
+# - name: Display value of "shipint" variable
+#   ansible.builtin.debug:
+#     msg:
+#       - "INTERFACES:"
+#       - " {{ command_output['stdout_lines'][0] | to_json }}"
+#       #- " EIGRP NEIGHBORS:"
+#       #- " {{ command_output['stdout_lines'][1] | to_json }}"
+#       # - command_output["stdout_lines"][1]
+#       # - command_output["stdout_lines"][2]
+#       # - command_output["stdout_lines"][3]

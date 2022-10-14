@@ -1,0 +1,13 @@
+interface Ethernet0/0
+   description Link to R1 configured by Ansible 
+   no switchport
+   ip address 10.1.11.2 255.255.255.0
+   ipv6 address 2001:db8:acad:11::2/64
+   ipv6 address fe80::11:2 link-local
+   no shutdown
+interface Loopback 0
+   description Loopback 0 configured by Ansible 
+   ip address 209.165.201.1 255.255.255.128
+   ipv6 address 2001:db8:209:165:201::1/80
+   ipv6 address fe80::209:1 link-local
+   no shutdown

@@ -1,0 +1,40 @@
+interfaces:
+ - name: Ethernet0/0
+   description: Link to R2 configured by Ansible
+   ipv4: 10.1.23.3/24
+   ipv6: 2001:db8:acad:23::3/64
+   link_local: fe80::23:3
+   AS: "64513"
+
+ - name: Ethernet0/1
+   description: Link to D2 configured by Ansible
+   ipv4: 10.1.32.1/24
+   ipv6: 2001:db8:acad:32::3/64
+   link_local: fe80::32:3
+   AS: "64512"
+   cdp: 'no'
+
+ - name: Loopback 0
+   description: Loopback 0 configured by Ansible
+   ipv4: 10.3.3.3/24
+   ipv6: 2001:db8:acad:3::3/64
+   link_local: fe80::3:3
+
+eigrp:
+  instances:
+    - asn : '64513'
+      mode: 'named'
+      rid: '3.3.3.3' 
+      asname: 'AS_CISCO'
+      redistribute: '64514'
+      networks:
+        - 10.1.23.0/24
+        - 10.3.3.0/24
+
+    - asn: '64514'
+      rid: 3.3.3.3 
+      mode: 'classic'
+      redistribute: '64513'
+      networks:
+        - 10.1.32.0/24
+ 

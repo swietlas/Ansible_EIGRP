@@ -1,0 +1,20 @@
+{% for instance in eigrp.instances -%}
+{% if instance.mode == 'classic' -%}
+{% if instance.redistribute is defined -%} 
+router eigrp {{ instance.asn }}
+  redistribute eigrp {{ instance.redistribute }}
+  exit
+{% endif -%}{#REDISTRIBUTION#}
+{#{% endif -%}
+{%- if  instance.mode == 'named'  -%}#}
+{% else -%} {# MODE #}
+{%+ if instance.redistribute is defined -%} 
+router eigrp {{ instance.asname }}
+  address-family ipv4 unicast autonomous-system {{ instance.asn }}
+    topology base
+      redistribute eigrp {{ instance.redistribute }}
+    exit-af-topology 
+  exit-address-family
+ {% endif -%}{# REDISTRIBUTION #}
+ {% endif -%}{# MODE #}
+{% endfor -%}{# EIGRP #}

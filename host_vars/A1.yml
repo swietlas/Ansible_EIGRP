@@ -1,0 +1,72 @@
+interfaces:
+ - name: Ethernet0/0
+   description: Link to D1 configured by Ansible
+   mode: trunk
+   allowed_vlans: 10-21,40
+   native: 10
+   encap: dot1q
+
+ - name: Ethernet0/1
+   description: Link to D1 configured by Ansible
+   mode: trunk
+   allowed_vlans: 10-21,40
+   native: 10
+   encap: dot1q
+
+ - name: Ethernet0/2
+   description: Link to D2 configured by Ansible
+   mode: trunk
+   allowed_vlans: 10-21,40
+   native: 10
+   encap: dot1q 
+
+ - name: Ethernet0/3
+   description: Link to D2 configured by Ansible
+   mode: trunk
+   allowed_vlans: 10-21,40
+   native: 10
+   encap: dot1q
+
+ - name: Ethernet1/0
+   description: Link to PC1 configured by Ansible
+   mode: access
+   access_vlan: 11
+   voice_vlan: 50
+
+ - name: Ethernet1/1
+   description: Link to PC2 configured by Ansible
+   mode: access
+   access_vlan: 21
+   voice_vlan: 50
+
+ - name: Vlan 11
+   description: int VLAN 11 configured by Ansible
+   ipv4: 10.11.0.3/24
+   ipv6: "2001:DB8:ACAD:11::3/64"  
+   link_local: FE80::A1:1
+   mode: L3
+  
+ - name: Vlan 21
+   description: int VLAN 21 configured by Ansible
+   ipv4: 10.21.0.3/24
+   ipv6: "2001:DB8:ACAD:21::3/64"
+   link_local: FE80::A1:2
+   mode: L3
+  
+portchannels:
+  - id: 1
+    members:
+     - member: Ethernet0/0
+       mode: active
+     - member: Ethernet0/1
+       mode: active
+    allowed_vlans: 10-21,40
+    native: 10
+  - id: 2
+    members:
+     - member: Ethernet0/2
+       mode: active
+     - member: Ethernet0/3
+       mode: active
+    allowed_vlans: 10-21,40
+    native: 10

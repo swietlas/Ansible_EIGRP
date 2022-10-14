@@ -1,0 +1,30 @@
+{% for instance in eigrp.instances -%}
+{% if instance.mode == 'classic' -%}
+router eigrp {{ instance.asn }}
+  {% for network in instance.networks %}
+  network {{ network | ipaddr('network') }} {{ network | ipaddr('wildcard') }}
+  {% endfor %}
+   {% if instance.redistribute is defined -%}
+   redistribute {{ instance.redistribute }}
+   {% endif -%}
+  {% if instance.stub is defined %}
+   stub {{ instance.stub }}
+  {% endif %}
+exit
+{#{% endif -%}
+{%- if  instance.mode == 'named'  -%}#}
+{% else -%} {# named mode #}
+router eigrp {{ instance.asname }}
+  address-family ipv4 unicast autonomous-system {{ instance.asn }}
+  {% for network in instance.networks %}
+  network {{ network | ipaddr('network') }} {{ network | ipaddr('wildcard') }}
+  {% endfor %}
+  {% if instance.redistribute is defined -%} 
+   redistribute {{ instance.redistribute }}
+ {% endif %}
+  {% if instance.stub is defined -%} 
+   stub {{ instance.stub }}
+  {% endif %}
+exit-address-family
+ {% endif -%}
+{% endfor -%}
