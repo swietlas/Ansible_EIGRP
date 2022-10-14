@@ -1,4 +1,4 @@
-# EVE-NG EIGRP distribution example
+# Ansible EIGRP distribution example using Jinja2 templates
 
 #### Short summary
 Eve-ng topology is stored in **eveng/** directory. I used eve-ng pro version. Please use Python virutal Environments.This was compiled to support ansible 2.9.4 version howerver it also should work with release >= 2.10.x 
@@ -92,7 +92,7 @@ interface {{ intf.name }}
 #### Main taks to configure router interfaces.
 ``` yaml
 ---
-# tasks file for rtr_interfaces
+# Tasks file for rtr_interfaces
 
 - name: " Build IOS interface config "
   ansible.builtin.template:
@@ -106,7 +106,7 @@ interface {{ intf.name }}
     save_when: "modified"
 ```
 
-#### Template for eigrp settings.
+#### Template for EIGRP settings.
 
 ``` jinja2
 {% for instance in eigrp.instances -%}
@@ -140,4 +140,3 @@ exit-address-family
  {% endif -%}
 {% endfor -%}
 ```
-#### Main task to configure router interfaces
